@@ -1,6 +1,7 @@
 package com.dubboclub.dk.admin.service;
 
 import com.dubboclub.dk.admin.model.Consumer;
+import com.dubboclub.dk.admin.model.Provider;
 
 import java.util.List;
 
@@ -8,6 +9,9 @@ import java.util.List;
  * Created by bieber on 2015/6/3.
  */
 public interface ConsumerService {
+
+    //加载所有的服务提供者
+    public List<Consumer> listAllConsumer();
 
     //获取某个应用的消费服务的列表
     public List<Consumer> listConsumerByApplication(String appName);

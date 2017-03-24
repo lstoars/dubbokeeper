@@ -15,6 +15,10 @@ public class BaseItem implements Serializable{
 
     private String remoteType;
 
+    private String remoteAddr;
+
+    private String application;
+
     public String getRemoteType() {
         return remoteType;
     }
@@ -45,5 +49,21 @@ public class BaseItem implements Serializable{
 
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getRemoteAddr() {
+        return remoteAddr;
+    }
+
+    public void setRemoteAddr(String remoteAddr) {
+        this.remoteAddr = remoteAddr;
+    }
+
+    public String getApplication() {
+        return application;
+    }
+
+    public void setApplication(String application) {
+        this.application = application;
     }
 }

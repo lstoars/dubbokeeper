@@ -60,6 +60,24 @@ public interface StatisticsStorage {
      */
     public StatisticsOverview queryApplicationOverview(String application, long start, long end);
 
+    /**
+     * 获取某个应用被其他ip调用的汇总情况
+     * @param application
+     * @param start
+     * @param end
+     * @return
+     */
+    public List<AddressCount> queryApplicationInvokerCount(String application, long start, long end);
+
+    /**
+     * 获取某个应用被其他ip调用的汇总情况
+     * @param application
+     * @param start
+     * @param end
+     * @return
+     */
+    public List<AddressCount> queryServiceInvokerCount(String application,String service, long start, long end);
+
 
     /**
      * 查询某个应用下面某个服务的统计信息
@@ -80,8 +98,5 @@ public interface StatisticsStorage {
     public Collection<ServiceInfo> queryServiceByApp(String application, long start, long end);
 
 
-
-
-
-    
+    public List<AddressCount> queryMethodInvokerCount(String application, String service, String method, long startTime, long endTime);
 }

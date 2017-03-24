@@ -124,12 +124,27 @@ public class MysqlStatisticsStorage implements StatisticsStorage,InitializingBea
         return statisticsOverview;
     }
 
+    @Override
+    public List<AddressCount> queryApplicationInvokerCount(String application, long start, long end) {
+        return statisticsMapper.queryApplicationInvokerCount(application,"successCount",start,end);
+    }
+
+    @Override
+    public List<AddressCount> queryServiceInvokerCount(String application, String service, long start, long end) {
+        return statisticsMapper.queryServiceInvokerCount(application,service,"successCount",start,end);
+    }
+
+    @Override
+    public List<AddressCount> queryMethodInvokerCount(String application, String service, String method, long startTime, long endTime) {
+        return statisticsMapper.queryMethodInvokerCount(application,service,method,"successCount",startTime,endTime);
+    }
 
     private void convertItem(BaseItem item,Statistics statistics){
         item.setMethod( statistics.getMethod());
         item.setService(statistics.getServiceInterface());
         item.setTimestamp(statistics.getTimestamp());
         item.setRemoteType(statistics.getRemoteType().toString());
+        item.setRemoteAddr(statistics.getRemoteAddress());
     }
 
     private void fillElapsedItem(List<Statistics> statisticses,StatisticsOverview statisticsOverview){

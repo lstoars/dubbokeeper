@@ -56,6 +56,75 @@ monitor.controller("serviceTop200",function($scope,$httpWrapper,$routeParams,$br
         loadServiceOverview();
     }
 
+    $httpWrapper.post({
+        url:"monitor/"+$scope.app+"/"+ $scope.name+"/"+$scope.dayRange+"/invoker.htm",
+        success:function(data){
+            require( [
+                'echarts',
+                'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+            ], function (echarts) {
+                require(['echarts/theme/macarons'], function(curTheme){
+                    var xAxisData=[];
+                    var nodes=[];
+                    $(data).each(function (index,item) {
+                        xAxisData.push(item.application);
+                        nodes.push(item.count);
+                    });
+                    /* for(var key in data){
+
+                     }*/
+                    var option = {
+                        title : {
+                            text: '调用成功应用分布'
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['调用成功数']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                magicType : {show: true, type: ['line', 'bar']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                data : xAxisData,
+                                show:false
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value'
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'调用成功数',
+                                type:'bar',
+                                data:nodes
+                            }
+                        ]
+                    };
+                    var myChart = echarts.init(document.getElementById('nodes'));
+                    myChart.setTheme(curTheme)
+                    myChart.setOption(option);
+                    var ecConfig = require('echarts/config');
+                    /*myChart.on(ecConfig.EVENT.CLICK, function (params) {
+                     location.hash="#/admin/"+params.name+"/nodes";
+                     });*/
+                });
+            });
+        }
+    });
+
 });
 monitor.controller("applicationTop200",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu){
     $menu.switchMenu("monitor/index");
@@ -90,6 +159,76 @@ monitor.controller("applicationTop200",function($scope,$httpWrapper,$routeParams
         $scope.dayRange=dayRange;
         loadApplicationOverview();
     }
+
+    $httpWrapper.post({
+        url:"monitor/"+$scope.name+"/"+$scope.dayRange+"/invoker.htm",
+        success:function(data){
+            require( [
+                'echarts',
+                'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+            ], function (echarts) {
+                require(['echarts/theme/macarons'], function(curTheme){
+                    var xAxisData=[];
+                    var nodes=[];
+                    $(data).each(function (index,item) {
+                        xAxisData.push(item.application);
+                        nodes.push(item.count);
+                    });
+                   /* for(var key in data){
+
+                    }*/
+                    var option = {
+                        title : {
+                            text: '调用成功应用分布'
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['调用成功数']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                magicType : {show: true, type: ['line', 'bar']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                data : xAxisData,
+                                show:false
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value'
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'调用成功数',
+                                type:'bar',
+                                data:nodes
+                            }
+                        ]
+                    };
+                    var myChart = echarts.init(document.getElementById('nodes'));
+                    myChart.setTheme(curTheme)
+                    myChart.setOption(option);
+                    var ecConfig = require('echarts/config');
+                    /*myChart.on(ecConfig.EVENT.CLICK, function (params) {
+                     location.hash="#/admin/"+params.name+"/nodes";
+                     });*/
+                });
+            });
+        }
+    });
+
 })
 
 monitor.controller("applicationOverview",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu){
@@ -168,6 +307,7 @@ monitor.controller("applicationOverview",function($scope,$httpWrapper,$routePara
         );
     }
     queryServiceInfo();
+
     $scope.switchView = function(service,type){
         service.showType=type;
     }
@@ -188,7 +328,11 @@ var generateXAxisData=function(items){
     var xAxisData = [];
     for(var i=0;i<items.length;i++){
         var date = new Date(items[i].timestamp);
-        var item = items[i].method+"于"+date.getDate()+"日"+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()
+        if(items[i].remoteType=='CONSUMER') {
+            var item = items[i].remoteAddr+"调用"+items[i].method+"于"+date.getDate()+"日"+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+        } else {
+            var item = "调用"+items[i].remoteAddr+"-"+items[i].method+"于"+date.getDate()+"日"+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+        }
         xAxisData.push(item);
     }
     return xAxisData;
@@ -352,6 +496,7 @@ monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$rout
             realtimeStatisticsData();
         }else{
             loadStatisticsData();
+            loadApplicationCount();
         }
     }
     var realtimeStatisticsData = function(){
@@ -393,6 +538,7 @@ monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$rout
     $scope.$watch("timeRange",function(){
         $scope.stopInterval();
         loadStatisticsData();
+        loadApplicationCount();
     });
     $scope.interval=10000;
     var loadInterval=function(){
@@ -409,7 +555,16 @@ monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$rout
         var xAxisData =[];
         for(var i=0;i<statistics.length;i++){
             var date = new Date(statistics[i].timestamp);
-            xAxisData.push((date.getMonth()+1)+"月"+date.getDate()+"日"+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds());
+           /* if(items[i].remoteType=='CONSUMER') {
+                var item = items[i].remoteAddr+"调用"+items[i].method+"于"+date.getDate()+"日"+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+            } else {
+                var item = "调用"+items[i].remoteAddr+"-"+items[i].method+"于"+date.getDate()+"日"+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+            }*/
+            if(statistics[i].remoteType=='CONSUMER') {
+                xAxisData.push(statistics[i].remoteAddress+"于"+(date.getMonth() + 1) + "月" + date.getDate() + "日" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
+            } else {
+                xAxisData.push("调用"+statistics[i].remoteAddress+"于"+(date.getMonth() + 1) + "月" + date.getDate() + "日" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
+            }
         }
         rendingData.xAxisData=xAxisData;
         rendingData.mainData=[];
@@ -521,6 +676,77 @@ monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$rout
     $scope.$on('$destroy',function(){
         $scope.stopInterval();
     })
+
+    var loadApplicationCount = function(){
+        $httpWrapper.post({
+            url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$routeParams.method+"/"+$scope.timeRange.startTime+"-"+$scope.timeRange.endTime+"/invoker.htm",
+            success:function(data){
+                require( [
+                    'echarts',
+                    'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                    'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+                ], function (echarts) {
+                    require(['echarts/theme/macarons'], function(curTheme){
+                        var xAxisData=[];
+                        var nodes=[];
+                        $(data).each(function (index,item) {
+                            xAxisData.push(item.application);
+                            nodes.push(item.count);
+                        });
+                        /* for(var key in data){
+
+                         }*/
+                        var option = {
+                            title : {
+                                text: '调用成功应用分布'
+                            },
+                            tooltip : {
+                                trigger: 'axis'
+                            },
+                            legend: {
+                                data:['调用成功数']
+                            },
+                            toolbox: {
+                                show : true,
+                                feature : {
+                                    magicType : {show: true, type: ['line', 'bar']},
+                                    restore : {show: true},
+                                    saveAsImage : {show: true}
+                                }
+                            },
+                            calculable : true,
+                            xAxis : [
+                                {
+                                    type : 'category',
+                                    data : xAxisData,
+                                    show:false
+                                }
+                            ],
+                            yAxis : [
+                                {
+                                    type : 'value'
+                                }
+                            ],
+                            series : [
+                                {
+                                    name:'调用成功数',
+                                    type:'bar',
+                                    data:nodes
+                                }
+                            ]
+                        };
+                        var myChart = echarts.init(document.getElementById('nodes'));
+                        myChart.setTheme(curTheme)
+                        myChart.setOption(option);
+                        var ecConfig = require('echarts/config');
+                        /*myChart.on(ecConfig.EVENT.CLICK, function (params) {
+                         location.hash="#/admin/"+params.name+"/nodes";
+                         });*/
+                    });
+                });
+            }
+        });
+    };
 });
 
 monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu,$interval){

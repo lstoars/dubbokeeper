@@ -479,6 +479,16 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
         return queryOverview(application,start,end,applicationQuery);
     }
 
+    @Override
+    public List<AddressCount> queryApplicationInvokerCount(String application, long start, long end) {
+        return null;
+    }
+
+    @Override
+    public List<AddressCount> queryServiceInvokerCount(String application, String service, long start, long end) {
+        return null;
+    }
+
 
     private String queryMaxRecord(String application, String field,SortField.Type type,long start,long end,TermQuery...queries){
         NumericRangeQuery<Long> timeQuery = NumericRangeQuery.newLongRange(DubboKeeperMonitorService.TIMESTAMP, start, end, true, true);
@@ -711,6 +721,11 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
             logger.error("failed to grouping search", e);
         }
         return new ArrayList<ServiceInfo>();
+    }
+
+    @Override
+    public List<AddressCount> queryMethodInvokerCount(String application, String service, String method, long startTime, long endTime) {
+        return null;
     }
 
 

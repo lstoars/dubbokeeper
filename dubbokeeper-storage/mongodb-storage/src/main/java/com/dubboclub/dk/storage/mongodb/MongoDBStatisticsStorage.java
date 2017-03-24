@@ -1,16 +1,7 @@
 package com.dubboclub.dk.storage.mongodb;
 
 import com.dubboclub.dk.storage.StatisticsStorage;
-import com.dubboclub.dk.storage.model.ApplicationInfo;
-import com.dubboclub.dk.storage.model.BaseItem;
-import com.dubboclub.dk.storage.model.ConcurrentItem;
-import com.dubboclub.dk.storage.model.ElapsedItem;
-import com.dubboclub.dk.storage.model.FaultItem;
-import com.dubboclub.dk.storage.model.MethodMonitorOverview;
-import com.dubboclub.dk.storage.model.ServiceInfo;
-import com.dubboclub.dk.storage.model.Statistics;
-import com.dubboclub.dk.storage.model.StatisticsOverview;
-import com.dubboclub.dk.storage.model.SuccessItem;
+import com.dubboclub.dk.storage.model.*;
 import com.dubboclub.dk.storage.mongodb.dao.ApplicationDao;
 import com.dubboclub.dk.storage.mongodb.dao.StatisticsDao;
 import com.dubboclub.dk.storage.mongodb.dto.TempMethodOveride;
@@ -156,6 +147,16 @@ public class MongoDBStatisticsStorage implements StatisticsStorage,InitializingB
     }
 
     @Override
+    public List<AddressCount> queryApplicationInvokerCount(String application, long start, long end) {
+        return null;
+    }
+
+    @Override
+    public List<AddressCount> queryServiceInvokerCount(String application, String service, long start, long end) {
+        return null;
+    }
+
+    @Override
     public StatisticsOverview queryServiceOverview(String application, String service, long start, long end) {
         StatisticsOverview statisticsOverview = new StatisticsOverview();
         List<Statistics> statisticses = statisticsDao.findServiceOverview(application,service,"concurrent",start,end);
@@ -191,6 +192,11 @@ public class MongoDBStatisticsStorage implements StatisticsStorage,InitializingB
                 application,
                 start,end));
         return infos;
+    }
+
+    @Override
+    public List<AddressCount> queryMethodInvokerCount(String application, String service, String method, long startTime, long endTime) {
+        return null;
     }
 
 

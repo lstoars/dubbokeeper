@@ -13,7 +13,6 @@ public interface ProviderService {
     //加载所有的服务提供者
     public List<Provider> listAllProvider();
 
-
     //查询某个应用提供的所有服务信息
     public List<Provider> listProviderByApplication(String appName);
 

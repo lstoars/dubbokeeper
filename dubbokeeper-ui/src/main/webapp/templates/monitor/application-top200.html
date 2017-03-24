@@ -59,6 +59,7 @@
                                 <th>消耗时间(ms)</th>
                                 <th>服务名称</th>
                                 <th>方法名称</th>
+                                <th>应用名称(根据IP)</th>
                                 <th>触发时间</th>
                             </tr>
                             </thead>
@@ -68,6 +69,7 @@
                                 <td>{{elapsed.elapsed}}</td>
                                 <td>{{elapsed.service}}</td>
                                 <td>{{elapsed.method}}</td>
+                                <td>{{elapsed.application}}</td>
                                 <td>{{elapsed.timestamp | date : 'MM-dd hh:mm:ss'}}</td>
                             </tr>
                             </tbody>
@@ -83,6 +85,7 @@
                                 <th>并发数量</th>
                                 <th>服务名称</th>
                                 <th>方法名称</th>
+                                <th>应用名称(根据IP)</th>
                                 <th>触发时间</th>
                             </tr>
                             </thead>
@@ -92,6 +95,7 @@
                                 <td>{{concurrent.concurrent}}</td>
                                 <td>{{concurrent.service}}</td>
                                 <td>{{concurrent.method}}</td>
+                                <td>{{concurrent.application}}</td>
                                 <td>{{concurrent.timestamp | date : 'MM-dd hh:mm:ss'}}</td>
                             </tr>
                             </tbody>
@@ -107,6 +111,7 @@
                                 <th>失败数量</th>
                                 <th>服务名称</th>
                                 <th>方法名称</th>
+                                <th>应用名称(根据IP)</th>
                                 <th>触发时间</th>
                             </tr>
                             </thead>
@@ -116,6 +121,7 @@
                                 <td>{{fault.fault}}</td>
                                 <td>{{fault.service}}</td>
                                 <td>{{fault.method}}</td>
+                                <td>{{fault.application}}</td>
                                 <td>{{fault.timestamp | date : 'MM-dd hh:mm:ss'}}</td>
                             </tr>
                             </tbody>
@@ -131,6 +137,7 @@
                                 <th>成功数量</th>
                                 <th>服务名称</th>
                                 <th>方法名称</th>
+                                <th>应用名称(根据IP)</th>
                                 <th>触发时间</th>
                             </tr>
                             </thead>
@@ -140,10 +147,16 @@
                                 <td>{{success.success}}</td>
                                 <td>{{success.service}}</td>
                                 <td>{{success.method}}</td>
+                                <td>{{success.application}}</td>
                                 <td>{{success.timestamp | date : 'MM-dd hh:mm:ss'}}</td>
                             </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" id="nodes" style="height: 400px;">
+
                     </div>
                 </div>
             </div>

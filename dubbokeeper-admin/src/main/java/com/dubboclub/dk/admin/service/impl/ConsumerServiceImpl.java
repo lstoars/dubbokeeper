@@ -16,6 +16,15 @@ import java.util.*;
 public class ConsumerServiceImpl extends AbstractService implements ConsumerService {
 
     @Override
+    public List<Consumer> listAllConsumer() {
+        return filterCategoryData(new ConvertURL2Entity<Consumer>() {
+            public Consumer convert(Pair<Long, URL> pair) {
+                return SyncUtils.url2Consumer(pair);
+            }
+        },Constants.CONSUMERS_CATEGORY);
+    }
+
+    @Override
     public List<Consumer> listConsumerByApplication(String appName) {
         return filterCategoryData(new ConvertURL2Entity<Consumer>() {
             @Override

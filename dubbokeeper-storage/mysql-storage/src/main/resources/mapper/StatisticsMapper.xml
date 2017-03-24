@@ -112,17 +112,13 @@
 
     <sql id="queryMethodSQLFragment">
        <![CDATA[
-
          select id from `statistics_${application}` where timestamp>=#{start} and timestamp<#{end} and serviceInterface=#{serviceInterface} and method=#{method}
-
         ]]>
     </sql>
 
     <sql id="queryAppSQLFragment">
         <![CDATA[
-
          select id from `statistics_${application}` where timestamp>=#{start} and timestamp<#{end}
-
         ]]>
     </sql>
 
@@ -170,7 +166,7 @@
     </select>
 
     <select id="queryApplicationOverview" resultType="Statistics">
-        select * from (select ${item},method,serviceInterface,timestamp,remoteType from
+        select * from (select ${item},method,serviceInterface,timestamp,remoteType,remoteAddress from
         `statistics_${application}` t
         <where>
             t.id in (
@@ -181,7 +177,7 @@
     </select>
 
     <select id="queryServiceOverview" resultType="Statistics">
-        select ${item},method,serviceInterface,timestamp,remoteType from `statistics_${application}` t
+        select ${item},method,serviceInterface,timestamp,remoteType,remoteAddress from `statistics_${application}` t
         <where>
             t.id in (
             <include refid="queryAppSQLFragment"></include>
@@ -197,6 +193,33 @@
 
     <select id="queryServiceByApp" resultMap="serviceInfoMap">
         select remoteType,serviceInterface from  `statistics_${application}` t group by t.serviceInterface,t.remoteType
+    </select>
+    
+    <select id="queryApplicationInvokerCount" resultType="AddressCount">
+        select remoteAddress,ifnull(sum(${item}),0) as `count` from `statistics_${application}` t
+        where
+            t.id in (
+            <include refid="queryAppSQLFragment"></include>
+            and type='PROVIDER')
+        group by remoteAddress
+    </select>
+
+    <select id="queryServiceInvokerCount" resultType="AddressCount">
+        select remoteAddress,ifnull(sum(${item}),0) as `count` from `statistics_${application}` t
+        where
+        t.id in (
+        <include refid="queryAppSQLFragment"></include>
+        and type='PROVIDER' and serviceInterface=#{serviceInterface})
+        group by remoteAddress
+    </select>
+    
+    <select id="queryMethodInvokerCount" resultType="AddressCount">
+        select remoteAddress,ifnull(sum(${item}),0) as `count` from `statistics_${application}` t
+        where
+        t.id in (
+        <include refid="queryAppSQLFragment"></include>
+        and type='PROVIDER' and serviceInterface=#{serviceInterface} and method=#{method})
+        group by remoteAddress
     </select>
 
 </mapper>
