@@ -222,4 +222,10 @@
         group by remoteAddress
     </select>
 
+    <delete id="deleteLessTime" parameterType="java.util.Map">
+        <![CDATA[
+        delete from `statistics_${application}` where timestamp<#{end}
+        ]]>
+    </delete>
+
 </mapper>

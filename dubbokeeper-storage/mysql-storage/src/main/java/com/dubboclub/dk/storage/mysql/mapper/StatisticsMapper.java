@@ -19,6 +19,8 @@ import java.util.Map;
  */
 public interface StatisticsMapper {
 
+	public void deleteLessTime(@Param("application") String application, @Param("end") long end);
+
 	public Integer addOne(@Param("application") String application, @Param("statistics") Statistics statistics);
 
 	public Integer batchInsert(@Param("application") String application, @Param("list") List<Statistics> statistics);

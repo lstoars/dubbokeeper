@@ -6,6 +6,7 @@ import com.alibaba.dubbo.common.utils.StringUtils;
 import com.dubboclub.dk.admin.model.BasicModel;
 import com.dubboclub.dk.admin.sync.RegistryServerSync;
 import com.dubboclub.dk.admin.sync.util.Pair;
+import com.dubboclub.dk.admin.sync.util.SyncUtils;
 import com.dubboclub.dk.admin.sync.util.Tool;
 
 import java.util.*;
@@ -89,11 +90,20 @@ public abstract class AbstractService {
             for(Map<Long, URL> urls:servicesUrls){
                 for(Map.Entry<Long,URL> entry:urls.entrySet()){
                     Map<String,String> parameters = entry.getValue().getParameters();
-                    if(parameters!=null){
+                    Map<String,String> newParameters = new HashMap<String, String>();
+                    newParameters.putAll(parameters);
+                    String hosts = entry.getValue().getHost();
+                    Integer port = entry.getValue().getPort();
+                    if (StringUtils.isEquals(category, Constants.PROVIDERS_CATEGORY)) {
+                        newParameters.put(SyncUtils.ADDRESS_FILTER_KEY, hosts + ":" + port);
+                    } else {
+                        newParameters.put(SyncUtils.ADDRESS_FILTER_KEY, hosts);
+                    }
+                    if(newParameters!=null){
                         boolean matched=true;
                         for(Map.Entry<String,String> filterEntry:filter.entrySet()){
                             String filterValue = filterEntry.getValue();
-                            String paramValue = parameters.get(filterEntry.getKey());
+                            String paramValue = newParameters.get(filterEntry.getKey());
                             if(StringUtils.isEquals(paramValue, filterValue)){
                                continue;
                             }else{
